@@ -1,24 +1,30 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { Keypair, SystemProgram, Transaction } from '@solana/web3.js';
-import React, { useCallback } from 'react';
+import {
+  Keypair,
+  SystemProgram,
+  Transaction,
+  PublicKey,
+} from '@solana/web3.js';
+import React, { useCallback, useState } from 'react';
 
 export const SendSol = () => {
+  const [lamports, setLamports] = useState<number | bigint>(0);
+  const [reciever, setReciever] = useState('');
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
 
   const onclick = useCallback(async () => {
     if (!publicKey) throw new WalletNotConnectedError();
 
-    const lamports = await connection.getMinimumBalanceForRentExemption(0);
-
-    const reciever = Keypair.fromSecretKey(new Uint8Array([]));
+    const recieverPubkey = new PublicKey(reciever);
 
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: publicKey,
-        toPubkey: reciever.publicKey,
+        toPubkey: recieverPubkey,
         lamports,
       })
     );
@@ -42,8 +48,16 @@ export const SendSol = () => {
   }, [publicKey, sendTransaction, connection]);
   return (
     <div>
+      <Input
+        placeholder="Enter the solana to be sent"
+        onChange={(e) => setLamports(parseInt(e.target.value) * 1e9)}
+      />
+      <Input
+        placeholder="Enter receiver's Solana address"
+        onChange={(e) => setReciever(e.target.value)}
+      />
       <Button onClick={onclick} disabled={!publicKey}>
-        Send min sol
+        Send sol
       </Button>
     </div>
   );
