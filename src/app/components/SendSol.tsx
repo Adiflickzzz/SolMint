@@ -12,7 +12,7 @@ import React, { useCallback, useState } from 'react';
 
 export const SendSol = () => {
   const [lamports, setLamports] = useState<number | bigint>(0);
-  const [reciever, setReciever] = useState('');
+  const [reciever, setReciever] = useState<string>('');
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
 
@@ -51,12 +51,14 @@ export const SendSol = () => {
       <Input
         placeholder="Enter the solana to be sent"
         onChange={(e) => setLamports(parseInt(e.target.value) * 1e9)}
+        required
       />
       <Input
         placeholder="Enter receiver's Solana address"
         onChange={(e) => setReciever(e.target.value)}
+        required
       />
-      <Button onClick={onclick} disabled={!publicKey}>
+      <Button onClick={onclick} type="submit" disabled={!publicKey}>
         Send sol
       </Button>
     </div>

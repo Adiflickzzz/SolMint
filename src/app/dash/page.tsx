@@ -1,5 +1,4 @@
-'use client';
-
+'use client'
 import {
   ConnectionProvider,
   WalletProvider,
@@ -14,6 +13,7 @@ import React, { useMemo } from 'react';
 import { clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { SendSol } from '../components/SendSol';
+import { CreateMint } from '../components/CreateMint';
 
 export default function Home(children: React.ReactNode) {
   const network = WalletAdapterNetwork.Devnet;
@@ -26,7 +26,7 @@ export default function Home(children: React.ReactNode) {
         <WalletModalProvider>
           <WalletMultiButton />
           <WalletDisconnectButton />
-          <SendSol />
+          <CreateMint />
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
